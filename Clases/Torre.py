@@ -13,6 +13,9 @@ class Torre:
     def recibir_dano(self, cantidad):
         self.vida -= cantidad
 
+        if self.vida < 0:
+            self.vida = 0
+            
     def esta_viva(self):
         return self.vida > 0
 
