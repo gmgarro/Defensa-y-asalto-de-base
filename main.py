@@ -1,6 +1,5 @@
-def main():
-    print("Hello, World!")
-    
-if __name__ == '__main__':
-    main()
-    
+from Interfaz.Menu import mostrar_menu, ventana
+
+mostrar_menu()
+
+ventana.mainloop()
