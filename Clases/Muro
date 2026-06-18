@@ -1,0 +1,14 @@
+class Muro:
+
+    def __init__(self):
+        self.costo = 50
+        self.vida = 150
+
+    def recibir_dano(self, dano):
+        self.vida -= dano
+
+        if self.vida < 0:
+            self.vida = 0
+
+    def esta_destruido(self):
+        return self.vida <= 0
