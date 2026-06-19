@@ -4,5 +4,65 @@
         "password": "1234",
         "victorias_defensor": 1,
         "victorias_atacante": 0
+    },
+    "Ana": {
+        "nombre": "Ana",
+        "password": "1234",
+        "victorias_defensor": 13,
+        "victorias_atacante": 13
+    },
+    "Luis": {
+        "nombre": "Luis",
+        "password": "1234",
+        "victorias_defensor": 11,
+        "victorias_atacante": 6
+    },
+    "Carlos": {
+        "nombre": "Carlos",
+        "password": "1234",
+        "victorias_defensor": 4,
+        "victorias_atacante": 14
+    },
+    "Maria": {
+        "nombre": "Maria",
+        "password": "1234",
+        "victorias_defensor": 19,
+        "victorias_atacante": 17
+    },
+    "Pedro": {
+        "nombre": "Pedro",
+        "password": "1234",
+        "victorias_defensor": 14,
+        "victorias_atacante": 12
+    },
+    "Sofia": {
+        "nombre": "Sofia",
+        "password": "1234",
+        "victorias_defensor": 18,
+        "victorias_atacante": 14
+    },
+    "Jorge": {
+        "nombre": "Jorge",
+        "password": "1234",
+        "victorias_defensor": 10,
+        "victorias_atacante": 9
+    },
+    "Valeria": {
+        "nombre": "Valeria",
+        "password": "1234",
+        "victorias_defensor": 20,
+        "victorias_atacante": 2
+    },
+    "Diego": {
+        "nombre": "Diego",
+        "password": "1234",
+        "victorias_defensor": 4,
+        "victorias_atacante": 18
+    },
+    "Laura": {
+        "nombre": "Laura",
+        "password": "1234",
+        "victorias_defensor": 16,
+        "victorias_atacante": 16
     }
 }

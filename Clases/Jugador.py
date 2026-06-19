@@ -4,7 +4,8 @@ import os
 
 class Jugador:
 
-    ARCHIVO_DATOS = "../Datos/usuarios.json"
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    ARCHIVO_DATOS = os.path.join(BASE_DIR, "..", "Datos", "usuarios.json")
 
     def __init__(self, nombre, password):
         self.nombre = nombre
@@ -83,3 +84,24 @@ class Jugador:
     def sumar_victoria_atacante(self):
         self.victorias_atacante += 1
         self.guardar_victorias()
+        
+        
+    @classmethod
+    def top_victorias(cls, campo):
+        usuarios = cls.cargar_todos()
+
+        jugadores = [
+            (nombre, datos.get(campo, 0))
+            for nombre, datos in usuarios.items()
+        ]
+
+        jugadores.sort(key=lambda x: x[1], reverse=True)
+        return jugadores[:5]
+    
+    @classmethod
+    def top_victorias_defensor(cls):
+        return cls.top_victorias("victorias_defensor")
+    
+    @classmethod
+    def top_victorias_atacante(cls):
+        return cls.top_victorias("victorias_atacante")
