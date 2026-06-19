@@ -16,9 +16,9 @@ class TorreBasica(Torre):
     def activar_habilidad(self, mapa):
         self.disparo_doble = True
 
-    def atacar(self, unidad):
-        super().atacar(unidad)
+    def atacar(self, Torre):
+        super().atacar(Torre)
 
         if self.disparo_doble:
-            super().atacar(unidad)
+            super().atacar(Torre)
             self.disparo_doble = False
