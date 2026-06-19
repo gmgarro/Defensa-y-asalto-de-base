@@ -58,5 +58,23 @@
         "password": "123",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+    },
+    "Jimenita": {
+        "nombre": "Jimenita",
+        "password": "1234",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Gabito": {
+        "nombre": "Gabito",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Felipe": {
+        "nombre": "Felipe",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }
