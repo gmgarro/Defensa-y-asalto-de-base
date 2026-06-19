@@ -9,15 +9,23 @@ class UnidadRapida(Unidad):
             dano=15,
             velocidad=3,
             habilidad="Aumento Velocidad",
-            turnos_habilidad=2
+            duracion_habilidad=2
         )
-        
+
         self.aumento_velocidad = False
-        
-        
+
     def activar_habilidad(self):
-        self.velocidad += 2
-    
+        if not self.aumento_velocidad:
+            super().activar_habilidad()
+            self.velocidad += 2
+            self.aumento_velocidad = True
+
     def atacar(self, objetivo):
         objetivo.recibir_dano(self.dano)
-    
+        
+    def actualizar_habilidad(self):
+        super().actualizar_habilidad()
+
+        if not self.habilidad_activa and self.aumento_velocidad:
+            self.velocidad -= 2
+            self.aumento_velocidad = False

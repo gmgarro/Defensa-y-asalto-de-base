@@ -1,123 +1,112 @@
 import os
 from tkinter import *
 
+class Menu:
+    def __init__(self, root, callback_ranking, callback_juego):
+        self.root = root
+        self.callback_ranking = callback_ranking
+        self.callback_juego = callback_juego
 
-ventana = Tk()
-ventana.title("Defensa y Asalto de Base")
+        self.canvas = Canvas(
+            root,
+            width=1200,
+            height=600,
+            bg="black",
+            highlightthickness=0
+        )
+        self.canvas.pack()
 
-canvas = Canvas(
-    ventana,
-    width=1200,
-    height=600,
-    bg="black",
-    highlightthickness=0
-)
-canvas.pack()
+        self.mostrar_menu()
 
+    # ── IMPORTANTE PARA MAIN ──
+    def destruir(self):
+        self.canvas.destroy()
 
-def limpiar_pantalla():
-    canvas.delete("all")
+    def limpiar(self):
+        self.canvas.delete("all")
 
+    def ajustar(self, ancho, alto):
+        self.root.geometry(f"{ancho}x{alto}")
+        self.canvas.config(width=ancho, height=alto)
 
-def ajustar_ventana(ancho, alto):
-    ventana.geometry(f"{ancho}x{alto}")
-    canvas.config(
-        width=ancho,
-        height=alto
-    )
+    def crear_boton(self, texto, accion):
+        btn = Button(
+            self.root,
+            text=texto,
+            command=accion,
+            font=("Arial", 14, "bold"),
+            bg="#111111",
+            fg="white",
+            activebackground="#001F63",
+            activeforeground="white",
+            bd=0,
+            relief="flat",
+            width=20,
+            height=2,
+            cursor="hand2"
+        )
 
+        def entrar(e):
+            btn.config(bg="#001F63")
 
-def crear_boton(texto, accion):
+        def salir(e):
+            btn.config(bg="#111111")
 
-    btn = Button(
-        ventana,
-        text=texto,
-        command=accion,
-        font=("Arial", 14, "bold"),
-        bg="#111111",
-        fg="white",
-        activebackground="#001F63",
-        activeforeground="white",
-        bd=0,
-        relief="flat",
-        width=20,
-        height=2,
-        cursor="hand2"
-    )
+        btn.bind("<Enter>", entrar)
+        btn.bind("<Leave>", salir)
 
-    def entrar(event):
-        btn.config(bg="#001F63", fg="white")
+        return btn
 
-    def salir(event):
-        btn.config(bg="#111111", fg="white")
+    # ── ACCIONES ──
+    def iniciar_juego(self):
+        self.callback_juego()
 
-    btn.bind("<Enter>", entrar)
-    btn.bind("<Leave>", salir)
+    def mostrar_estadisticas(self):
+        self.callback_ranking()
 
-    return btn
+    def salir(self):
+        self.root.destroy()
 
+    # ── PANTALLA ──
+    def mostrar_menu(self):
+        self.ajustar(1200, 600)
+        self.limpiar()
 
-def iniciar_juego():
-    print("Iniciar juego")
+        ruta = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "Recursos",
+            "Imagenes",
+            "main_background.png"
+        )
 
+        try:
+            fondo = PhotoImage(file=ruta)
+            self.canvas.fondo = fondo
+            self.canvas.create_image(0, 0, image=fondo, anchor="nw")
+        except:
+            self.canvas.config(bg="black")
 
-def mostrar_estadisticas():
-    print("Mostrar estadísticas")
+        centro_x = 600
 
+        self.canvas.create_rectangle(
+            275, 50, 900, 450,
+            fill="#111111",
+            outline="#001F63",
+            width=3
+        )
 
-def salir():
-    ventana.destroy()
+        self.canvas.create_text(
+            centro_x, 130,
+            text="DEFENSA Y ASALTO DE BASE",
+            fill="#3A7BFF",
+            font=("Impact", 36)
+        )
 
+        btn_jugar = self.crear_boton("Jugar", self.iniciar_juego)
+        btn_stats = self.crear_boton("Ranking", self.mostrar_estadisticas)
+        btn_salir = self.crear_boton("Salir", self.salir)
 
-def mostrar_menu():
-
-    ajustar_ventana(1200, 600)
-    limpiar_pantalla()
-
-    ruta_imagen = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "Recursos",
-        "Imagenes",
-        "main_background.png"
-    )
-
-    try:
-        fondo = PhotoImage(file=ruta_imagen)
-        canvas.fondo = fondo
-        canvas.create_image(0, 0, image=fondo, anchor="nw")
-    except:
-        canvas.config(bg="black")
-
-    centro_x = 600
-
-    # ── Panel principal ──
-    canvas.create_rectangle(
-        275, 50, 900, 450,
-        fill="#111111",
-        outline="#001F63",
-        width=3
-    )
-
-    # ── Esquinas decorativas tipo HUD ──
-    esquinas = [(275, 50), (900, 50), (275, 450), (900, 450)]
-    for x, y in esquinas:
-        canvas.create_line(x - 12, y, x + 12, y, fill="#3A7BFF", width=2)
-        canvas.create_line(x, y - 12, x, y + 12, fill="#3A7BFF", width=2)
-
-    # ── Título ──
-    canvas.create_text(
-        centro_x, 130,
-        text="DEFENSA Y ASALTO DE BASE",
-        fill="#3A7BFF",
-        font=("Impact", 36)
-    )
-
-    # ── Botones ──
-    btn_jugar = crear_boton("Jugar", iniciar_juego)
-    btn_estadisticas = crear_boton("Estadísticas", mostrar_estadisticas)
-    btn_salir = crear_boton("Salir", salir)
-
-    canvas.create_window(centro_x, 250, window=btn_jugar)
-    canvas.create_window(centro_x, 320, window=btn_estadisticas)
-    canvas.create_window(centro_x, 390, window=btn_salir)
+        self.canvas.create_window(centro_x, 250, window=btn_jugar)
+        self.canvas.create_window(centro_x, 320, window=btn_stats)
+        self.canvas.create_window(centro_x, 390, window=btn_salir)

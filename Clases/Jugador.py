@@ -93,6 +93,7 @@ class Jugador:
         jugadores = [
             (nombre, datos.get(campo, 0))
             for nombre, datos in usuarios.items()
+            if datos.get(campo, 0) > 0
         ]
 
         jugadores.sort(key=lambda x: x[1], reverse=True)

@@ -1,68 +1,62 @@
 {
-    "gabriel": {
-        "nombre": "gabriel",
-        "password": "1234",
-        "victorias_defensor": 1,
-        "victorias_atacante": 0
-    },
     "Ana": {
         "nombre": "Ana",
-        "password": "1234",
-        "victorias_defensor": 13,
-        "victorias_atacante": 13
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
     "Luis": {
         "nombre": "Luis",
-        "password": "1234",
-        "victorias_defensor": 11,
-        "victorias_atacante": 6
+        "password": "123",
+        "victorias_defensor": 2,
+        "victorias_atacante": 3
     },
     "Carlos": {
         "nombre": "Carlos",
-        "password": "1234",
-        "victorias_defensor": 4,
-        "victorias_atacante": 14
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 5
     },
     "Maria": {
         "nombre": "Maria",
-        "password": "1234",
-        "victorias_defensor": 19,
-        "victorias_atacante": 17
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
-    "Pedro": {
-        "nombre": "Pedro",
-        "password": "1234",
-        "victorias_defensor": 14,
-        "victorias_atacante": 12
+    "Jose": {
+        "nombre": "Jose",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
     "Sofia": {
         "nombre": "Sofia",
-        "password": "1234",
-        "victorias_defensor": 18,
-        "victorias_atacante": 14
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
-    "Jorge": {
-        "nombre": "Jorge",
-        "password": "1234",
-        "victorias_defensor": 10,
-        "victorias_atacante": 9
+    "Pedro": {
+        "nombre": "Pedro",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
-    "Valeria": {
-        "nombre": "Valeria",
-        "password": "1234",
-        "victorias_defensor": 20,
-        "victorias_atacante": 2
+    "Elena": {
+        "nombre": "Elena",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
     "Diego": {
         "nombre": "Diego",
-        "password": "1234",
-        "victorias_defensor": 4,
-        "victorias_atacante": 18
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     },
     "Laura": {
         "nombre": "Laura",
-        "password": "1234",
-        "victorias_defensor": 16,
-        "victorias_atacante": 16
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }
