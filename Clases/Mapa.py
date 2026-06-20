@@ -3,6 +3,9 @@ from Clases.Base import Base
 
 class Mapa:
 
+    #e: tamaño del mapa
+    #s: objeto Mapa inicializado
+    # Crea el mapa con una base en el centro y los colores de las facciones
     def __init__(self, size=15):
 
         self.size = size
@@ -49,12 +52,18 @@ class Mapa:
     # VALIDACIONES
     # =====================================================
 
+    #e: fila, columna
+    #s: valor booleano
+    # Verifica si una posición está dentro de los límites del mapa
     def en_rango(self, fila, columna):
         return (
             0 <= fila < self.size and
             0 <= columna < self.size
         )
 
+    #e: fila, columna
+    #s: valor booleano
+    # Indica si una celda está libre
     def celda_libre(self, fila, columna):
 
         if not self.en_rango(fila, columna):
@@ -66,6 +75,9 @@ class Mapa:
     # COLOCAR OBJETOS
     # =====================================================
 
+    #e: fila, columna, objeto
+    #s: valor booleano
+    # Coloca un objeto en una posición del mapa
     def colocar(self, fila, columna, objeto):
 
         if not self.en_rango(fila, columna):
@@ -85,6 +97,9 @@ class Mapa:
     # ELIMINAR OBJETO
     # =====================================================
 
+    #e: fila, columna
+    #s: valor booleano
+    # Elimina un objeto del mapa si no corresponde a la base
     def eliminar(self, fila, columna):
 
         if not self.en_rango(fila, columna):
@@ -101,6 +116,9 @@ class Mapa:
     # MOVIMIENTO DE UNIDADES
     # =====================================================
 
+    #e: unidad, nueva fila, nueva columna
+    #s: valor booleano
+    # Mueve una unidad a una nueva posición del mapa
     def mover_unidad(self, unidad, nueva_fila, nueva_columna):
 
         if not self.en_rango(nueva_fila, nueva_columna):
@@ -133,6 +151,9 @@ class Mapa:
     # DAÑO A LA BASE
     # =====================================================
 
+    #e: cantidad de daño
+    #s: ninguna
+    # Aplica daño a la base del mapa
     def danar_base(self, dano):
         self.base.recibir_dano(dano)
 
@@ -140,6 +161,9 @@ class Mapa:
     # CONSULTAS
     # =====================================================
 
+    #e: fila, columna
+    #s: objeto o None
+    # Obtiene el objeto que se encuentra en una posición
     def obtener_objeto(self, fila, columna):
 
         if not self.en_rango(fila, columna):
@@ -151,6 +175,9 @@ class Mapa:
     # TORRES
     # =====================================================
 
+    #e: fila, columna, alcance
+    #s: unidad o None
+    # Busca la unidad viva más cercana dentro del alcance indicado
     def unidad_mas_cercana(self, fila, columna, alcance):
 
         mejor = None
@@ -184,6 +211,9 @@ class Mapa:
 
         return mejor
 
+    #e: fila, columna, alcance
+    #s: lista de unidades
+    # Obtiene todas las unidades vivas dentro del alcance indicado
     def unidades_en_rango(self, fila, columna, alcance):
 
         unidades = []
@@ -216,6 +246,9 @@ class Mapa:
     # REINICIAR RONDA
     # =====================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Reinicia el mapa y vuelve a crear la base en el centro
     def reiniciar(self):
 
         self.grid = [

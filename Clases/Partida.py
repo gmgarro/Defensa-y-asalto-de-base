@@ -1,5 +1,8 @@
 class Partida:
     
+    #e: jugador defensor, jugador atacante, facción defensora, facción atacante y mapa
+    #s: objeto Partida inicializado
+    # Crea una nueva partida con sus jugadores, facciones, mapa y recursos iniciales
     def __init__(
         self,
         jugador_defensor,
@@ -56,6 +59,9 @@ class Partida:
     # LOOP PRINCIPAL
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Actualiza la partida ejecutando el combate cuando corresponde
     def actualizar(self):
 
         if self.finalizada:
@@ -70,6 +76,9 @@ class Partida:
     # COMPRAS
     # ==================================================
 
+    #e: torre, fila y columna
+    #s: valor booleano
+    # Coloca una torre en el mapa si cumple las condiciones
     def colocar_torre(self, torre, fila, columna):
 
         if self.fase != "DEFENSOR":
@@ -87,6 +96,9 @@ class Partida:
 
         return False
 
+    #e: muro, fila y columna
+    #s: valor booleano
+    # Coloca un muro en el mapa si cumple las condiciones
     def colocar_muro(self, muro, fila, columna):
 
         if self.fase != "DEFENSOR":
@@ -104,6 +116,9 @@ class Partida:
 
         return False
 
+    #e: unidad, fila y columna
+    #s: valor booleano
+    # Coloca una unidad atacante en el mapa
     def colocar_unidad(self, unidad, fila, columna):
 
         if self.fase != "ATAQUE":
@@ -125,6 +140,9 @@ class Partida:
     # CAMBIO DE FASE
     # ==================================================
 
+    #e: ninguna
+    #s: valor booleano
+    # Cambia la fase actual de la partida
     def pasar_fase(self):
 
         # El jugador decide avanzar de fase; el oro restante no debe
@@ -145,6 +163,9 @@ class Partida:
     # COMBATE
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Ejecuta las acciones principales del combate
     def ejecutar_combate(self):
 
         self.mover_unidades()
@@ -159,6 +180,9 @@ class Partida:
     # MOVIMIENTO
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Mueve las unidades atacantes y aplica daño cuando corresponde
     def mover_unidades(self):
 
         for unidad in list(self.unidades):
@@ -233,6 +257,9 @@ class Partida:
 
                     break
 
+    #e: fila y columna
+    #s: valor booleano
+    # Verifica si una posición está junto a la base
     def adyacente_a_base(self, fila, columna):
 
         distancia = max(
@@ -249,6 +276,9 @@ class Partida:
     # TORRES
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Hace que las torres ataquen a las unidades enemigas
     def torres_atacan(self):
 
         for torre in self.torres:
@@ -271,6 +301,9 @@ class Partida:
     # LIMPIEZA
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Elimina del mapa las entidades destruidas
     def limpiar_muertos(self):
 
         for unidad in list(self.unidades):
@@ -312,6 +345,9 @@ class Partida:
     # RONDAS
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Verifica si la ronda actual ha terminado
     def verificar_fin_ronda(self):
 
         # atacante gana: la base fue destruida
@@ -341,6 +377,9 @@ class Partida:
     # NUEVA RONDA
     # ==================================================
 
+    #e: ninguna
+    #s: ninguna
+    # Reinicia la ronda o finaliza la partida si alguien alcanzó tres victorias
     def reiniciar_ronda(self):
 
         if self.victorias_defensor >= 3:

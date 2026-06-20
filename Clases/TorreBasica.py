@@ -1,6 +1,10 @@
 from Clases.Torre import Torre
 
 class TorreBasica(Torre):
+
+    #e: ninguna
+    #s: objeto TorreBasica inicializado
+    # Crea una torre básica con sus estadísticas y habilidad especial
     def __init__(self):
         super().__init__(
             nombre="Torre Básica",
@@ -13,9 +17,15 @@ class TorreBasica(Torre):
         
         self.disparo_doble = False
 
+    #e: mapa
+    #s: ninguna
+    # Activa la habilidad de disparo doble
     def activar_habilidad(self, mapa):
         self.disparo_doble = True
 
+    #e: unidad objetivo
+    #s: ninguna
+    # Ataca al objetivo y realiza un segundo ataque si la habilidad está activa
     def atacar(self, Torre):
         super().atacar(Torre)
 

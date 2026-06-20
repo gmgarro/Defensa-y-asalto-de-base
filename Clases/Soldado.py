@@ -1,6 +1,10 @@
 from Clases.Unidad import Unidad
 
 class Soldado(Unidad):
+
+    #e: ninguna
+    #s: objeto Soldado inicializado
+    # Crea un soldado con sus estadísticas y habilidad especial
     def __init__(self):
         super().__init__(
             nombre="Soldado",
@@ -16,11 +20,19 @@ class Soldado(Unidad):
         self.disparo_doble = False
 
     # ─────────────────────────────
+
+    #e: ninguna
+    #s: ninguna
+    # Activa la habilidad de disparo doble
     def activar_habilidad(self):
         super().activar_habilidad()
         self.disparo_doble = True
 
     # ─────────────────────────────
+
+    #e: unidad objetivo
+    #s: ninguna
+    # Ataca a una unidad y realiza un segundo ataque si la habilidad está activa
     def atacar(self, unidad):
         super().atacar(unidad)
 

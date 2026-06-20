@@ -28,6 +28,10 @@ atacantes = [
 ]
 
 # ── CREAR Y GUARDAR ──
+
+#e: ninguna
+#s: ninguna
+# Crea jugadores de prueba y actualiza sus victorias en el archivo
 for i in range(10):
     nombre = defensores[i][0]
     vict_def = defensores[i][1]

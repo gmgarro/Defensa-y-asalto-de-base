@@ -118,5 +118,17 @@
         "password": "1234",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+    },
+    "Estebitan": {
+        "nombre": "Estebitan",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "chompi": {
+        "nombre": "chompi",
+        "password": "abc",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }

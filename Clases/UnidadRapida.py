@@ -1,6 +1,10 @@
 from Clases.Unidad import Unidad
 
 class UnidadRapida(Unidad):
+
+    #e: ninguna
+    #s: objeto UnidadRapida inicializado
+    # Crea una unidad rápida con sus estadísticas y habilidad especial
     def __init__(self):
         super().__init__(
             nombre="Unidad Rápida",
@@ -17,6 +21,10 @@ class UnidadRapida(Unidad):
         self.aumento_velocidad = False
 
     # ─────────────────────────────
+
+    #e: ninguna
+    #s: ninguna
+    # Activa la habilidad y aumenta temporalmente la velocidad
     def activar_habilidad(self):
         if not self.aumento_velocidad:
             super().activar_habilidad()
@@ -24,10 +32,18 @@ class UnidadRapida(Unidad):
             self.aumento_velocidad = True
 
     # ─────────────────────────────
+
+    #e: objetivo a atacar
+    #s: ninguna
+    # Aplica daño al objetivo
     def atacar(self, objetivo):
         objetivo.recibir_dano(self.dano)
 
     # ─────────────────────────────
+
+    #e: ninguna
+    #s: ninguna
+    # Actualiza la habilidad y restaura la velocidad original cuando termina
     def actualizar_habilidad(self):
         super().actualizar_habilidad()
 
