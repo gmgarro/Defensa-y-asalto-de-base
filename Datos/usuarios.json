@@ -130,5 +130,17 @@
         "password": "abc",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+    },
+    "esteban": {
+        "nombre": "esteban",
+        "password": "1243",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "si": {
+        "nombre": "si",
+        "password": "avc",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }
