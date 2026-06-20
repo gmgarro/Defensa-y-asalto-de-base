@@ -1,4 +1,4 @@
-from Torre import Torre
+from Clases.Torre import Torre
 
 class TorreBasica(Torre):
     def __init__(self):

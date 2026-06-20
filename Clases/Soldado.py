@@ -1,4 +1,4 @@
-from Unidad import Unidad
+from Clases.Unidad import Unidad
 
 class Soldado(Unidad):
     def __init__(self):
@@ -9,15 +9,18 @@ class Soldado(Unidad):
             dano=20,
             velocidad=2,
             habilidad="Disparo doble",
-            duracion_habilidad=1
+            duracion_habilidad=1,
+            posicion=(0, 0) 
         )
 
         self.disparo_doble = False
 
+    # ─────────────────────────────
     def activar_habilidad(self):
         super().activar_habilidad()
         self.disparo_doble = True
 
+    # ─────────────────────────────
     def atacar(self, unidad):
         super().atacar(unidad)
 

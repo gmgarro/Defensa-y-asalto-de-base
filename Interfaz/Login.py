@@ -1,12 +1,15 @@
 from tkinter import *
-
 from Clases.Jugador import Jugador
+from tkinter import messagebox
 
 
 class Login:
     def __init__(self, root, callback_listo):
         self.root = root
         self.callback_listo = callback_listo
+
+        self.faccion_defensor = StringVar(value="Medieval")
+        self.faccion_atacante = StringVar(value="Futurista")
 
         self.canvas = Canvas(
             root,
@@ -25,11 +28,13 @@ class Login:
 
         self.estado_defensor = None
         self.estado_atacante = None
-        self.pendiente_registro = None
-        
+
         self.mostrar_login()
 
-    # ── IMPORTANTE PARA MAIN ──
+    # ─────────────────────────────
+    # CONTROL GENERAL
+    # ─────────────────────────────
+
     def destruir(self):
         for w in self.widgets_defensor + self.widgets_atacante:
             w.destroy()
@@ -45,6 +50,10 @@ class Login:
     def ajustar(self, ancho, alto):
         self.root.geometry(f"{ancho}x{alto}")
         self.canvas.config(width=ancho, height=alto)
+
+    # ─────────────────────────────
+    # UI HELPERS
+    # ─────────────────────────────
 
     def crear_boton(self, texto, accion, ancho=18):
         btn = Button(
@@ -63,16 +72,46 @@ class Login:
             cursor="hand2"
         )
 
-        def entrar(e):
-            btn.config(bg="#001F63")
-
-        def salir(e):
-            btn.config(bg="#111111")
-
-        btn.bind("<Enter>", entrar)
-        btn.bind("<Leave>", salir)
+        btn.bind("<Enter>", lambda e: btn.config(bg="#001F63"))
+        btn.bind("<Leave>", lambda e: btn.config(bg="#111111"))
 
         return btn
+
+    def crear_selector_faccion(self, x, y, variable):
+        opciones = ["Medieval", "Futurista", "Naturaleza"]
+
+        selector = OptionMenu(
+            self.root,
+            variable,
+            *opciones
+        )
+
+        selector.config(
+            bg="#001F63",
+            fg="white",
+            activebackground="#3A7BFF",
+            activeforeground="white",
+            font=("Arial", 11, "bold"),
+            relief="flat",
+            bd=0,
+            width=15,
+            highlightthickness=0,
+            cursor="hand2"
+        )
+
+        menu = selector["menu"]
+        menu.config(
+            bg="#111111",
+            fg="white",
+            activebackground="#001F63",
+            activeforeground="white",
+            font=("Arial", 11),
+            relief="flat",
+            bd=0
+        )
+
+        self.canvas.create_window(x, y, window=selector)
+        return selector
 
     def crear_entry(self, x, y, es_password=False):
         entry = Entry(
@@ -86,10 +125,17 @@ class Login:
             justify="center",
             show="*" if es_password else ""
         )
+
         self.canvas.create_window(x, y, window=entry)
         return entry
 
-    # ── LÓGICA COMPARTIDA ──
+    # ─────────────────────────────
+    # VALIDACIONES
+    # ─────────────────────────────
+
+    def facciones_validas(self):
+        return self.faccion_defensor.get() != self.faccion_atacante.get()
+
     def usuarios_son_distintos(self, nombre, rol):
         if rol == "defensor" and self.jugador_atacante:
             return nombre != self.jugador_atacante.nombre
@@ -98,10 +144,33 @@ class Login:
         return True
 
     def verificar_ambos_listos(self):
-        if self.jugador_defensor and self.jugador_atacante:
-            self.callback_listo(self.jugador_defensor, self.jugador_atacante)
+        if not self.jugador_defensor or not self.jugador_atacante:
+            return
 
-    # ── ACCIONES DEFENSOR ──
+        if not self.facciones_validas():
+            self.canvas.itemconfig(
+                self.estado_defensor,
+                text="No pueden usar la misma facción",
+                fill="#FF4444"
+            )
+            self.canvas.itemconfig(
+                self.estado_atacante,
+                text="No pueden usar la misma facción",
+                fill="#FF4444"
+            )
+            return
+
+        self.callback_listo(
+            self.jugador_defensor,
+            self.jugador_atacante,
+            self.faccion_defensor.get(),
+            self.faccion_atacante.get()
+        )
+
+    # ─────────────────────────────
+    # DEFENSOR
+    # ─────────────────────────────
+
     def confirmar_defensor(self, entry_usuario, entry_password):
         nombre = entry_usuario.get().strip()
         password = entry_password.get().strip()
@@ -128,8 +197,6 @@ class Login:
             usuarios = Jugador.cargar_todos()
 
             if nombre not in usuarios:
-                from tkinter import messagebox
-
                 respuesta = messagebox.askyesno(
                     "Usuario no encontrado",
                     f"El usuario '{nombre}' no existe.\n¿Deseas registrarlo?"
@@ -159,9 +226,13 @@ class Login:
             text=f"Listo: {nombre}",
             fill="#3A7BFF"
         )
+
         self.verificar_ambos_listos()
 
-    # ── ACCIONES ATACANTE ──
+    # ─────────────────────────────
+    # ATACANTE
+    # ─────────────────────────────
+
     def confirmar_atacante(self, entry_usuario, entry_password):
         nombre = entry_usuario.get().strip()
         password = entry_password.get().strip()
@@ -188,8 +259,6 @@ class Login:
             usuarios = Jugador.cargar_todos()
 
             if nombre not in usuarios:
-                from tkinter import messagebox
-
                 respuesta = messagebox.askyesno(
                     "Usuario no encontrado",
                     f"El usuario '{nombre}' no existe.\n¿Deseas registrarlo?"
@@ -219,73 +288,61 @@ class Login:
             text=f"Listo: {nombre}",
             fill="#3A7BFF"
         )
+
         self.verificar_ambos_listos()
 
-    # ── PANTALLA ──
+    # ─────────────────────────────
+    # PANTALLA LOGIN
+    # ─────────────────────────────
+
     def mostrar_login(self):
         self.ajustar(1200, 600)
         self.limpiar()
 
-        # ── Panel izquierdo: DEFENSOR ──
-        self.canvas.create_rectangle(
-            50, 50, 575, 520,
-            fill="#111111",
-            outline="#001F63",
-            width=3
-        )
-        self.canvas.create_text(
-            312, 100,
-            text="DEFENSOR",
-            fill="#3A7BFF",
-            font=("Impact", 28)
-        )
+        # ── DEFENSOR ──
+        self.canvas.create_rectangle(50, 50, 575, 520, fill="#111111", outline="#001F63", width=3)
+        self.canvas.create_text(312, 100, text="DEFENSOR", fill="#3A7BFF", font=("Impact", 28))
 
-        self.canvas.create_text(312 - 180, 160, text="Usuario", fill="white", font=("Arial", 11), anchor="w")
+        self.canvas.create_text(132, 160, text="Usuario", fill="white", anchor="w")
         entry_user_def = self.crear_entry(320, 160)
 
-        self.canvas.create_text(312 - 180, 220, text="Contraseña", fill="white", font=("Arial", 11), anchor="w")
+        self.canvas.create_text(132, 220, text="Contraseña", fill="white", anchor="w")
         entry_pass_def = self.crear_entry(320, 220, es_password=True)
+
+        self.crear_selector_faccion(320, 280, self.faccion_defensor)
 
         btn_def = self.crear_boton(
             "Confirmar",
             lambda: self.confirmar_defensor(entry_user_def, entry_pass_def)
         )
-        self.canvas.create_window(312, 300, window=btn_def)
+        self.canvas.create_window(312, 330, window=btn_def)
 
         self.estado_defensor = self.canvas.create_text(
-            312, 360, text="", fill="white", font=("Arial", 10, "bold")
+            312, 380, text="", fill="white", font=("Arial", 10, "bold")
         )
 
         self.widgets_defensor = [entry_user_def, entry_pass_def]
 
-        # ── Panel derecho: ATACANTE ──
-        self.canvas.create_rectangle(
-            625, 50, 1150, 520,
-            fill="#111111",
-            outline="#001F63",
-            width=3
-        )
-        self.canvas.create_text(
-            887, 100,
-            text="ATACANTE",
-            fill="#3A7BFF",
-            font=("Impact", 28)
-        )
+        # ── ATACANTE ──
+        self.canvas.create_rectangle(625, 50, 1150, 520, fill="#111111", outline="#001F63", width=3)
+        self.canvas.create_text(887, 100, text="ATACANTE", fill="#3A7BFF", font=("Impact", 28))
 
-        self.canvas.create_text(887 - 180, 160, text="Usuario", fill="white", font=("Arial", 11), anchor="w")
+        self.canvas.create_text(707, 160, text="Usuario", fill="white", anchor="w")
         entry_user_atk = self.crear_entry(895, 160)
 
-        self.canvas.create_text(887 - 180, 220, text="Contraseña", fill="white", font=("Arial", 11), anchor="w")
+        self.canvas.create_text(707, 220, text="Contraseña", fill="white", anchor="w")
         entry_pass_atk = self.crear_entry(895, 220, es_password=True)
+
+        self.crear_selector_faccion(895, 280, self.faccion_atacante)
 
         btn_atk = self.crear_boton(
             "Confirmar",
             lambda: self.confirmar_atacante(entry_user_atk, entry_pass_atk)
         )
-        self.canvas.create_window(887, 300, window=btn_atk)
+        self.canvas.create_window(887, 330, window=btn_atk)
 
         self.estado_atacante = self.canvas.create_text(
-            887, 360, text="", fill="white", font=("Arial", 10, "bold")
+            887, 380, text="", fill="white", font=("Arial", 10, "bold")
         )
 
         self.widgets_atacante = [entry_user_atk, entry_pass_atk]

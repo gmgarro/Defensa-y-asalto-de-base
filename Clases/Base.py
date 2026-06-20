@@ -1,7 +1,9 @@
 class Base:
-    
+
     def __init__(self):
         self.vida = 500
+        self.fila = None
+        self.columna = None
 
     def recibir_dano(self, dano):
         self.vida -= dano

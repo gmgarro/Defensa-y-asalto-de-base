@@ -1,65 +1,379 @@
 class Partida:
-    def __init__(self):
-        self.unidades_atacantes = []
-        self.unidades_defensoras = []
-        self.turno = 1
-        self.base_vida = 500
-        self.juego_activo = True
+    
+    def __init__(
+        self,
+        jugador_defensor,
+        jugador_atacante,
+        faccion_defensor,
+        faccion_atacante,
+        mapa
+    ):
 
-    def agregar_atacante(self, unidad):
-        self.unidades_atacantes.append(unidad)
+        self.jugador_defensor = jugador_defensor
+        self.jugador_atacante = jugador_atacante
 
-    def agregar_defensor(self, unidad):
-        self.unidades_defensoras.append(unidad)
+        self.faccion_defensor = faccion_defensor
+        self.faccion_atacante = faccion_atacante
 
-    def mover_atacantes(self):
-        for unidad in self.unidades_atacantes:
-            x, y = unidad.posicion
-            nueva_pos = (x + unidad.velocidad, y)
-            unidad.mover(nueva_pos)
+        self.mapa = mapa
 
-    def combate(self):
-        for atacante in self.unidades_atacantes:
-            for defensor in self.unidades_defensoras:
-                if atacante.posicion == defensor.posicion and atacante.esta_viva() and defensor.esta_viva():
-                    atacante.atacar(defensor)
+        # ====================================
+        # ECONOMÍA
+        # ====================================
 
-                    if defensor.esta_viva():
-                        defensor.atacar(atacante)
+        self.oro_defensor = 1500
+        self.oro_atacante = 1500
 
-    def daño_a_base(self):
-        for unidad in self.unidades_atacantes:
-            if unidad.esta_viva() and unidad.posicion == (10, 10):
-                self.base_vida -= unidad.dano
-                unidad.vida = 0
+        self.bono_atacante = 0
 
-    def limpiar_muertos(self):
-        self.unidades_atacantes = [u for u in self.unidades_atacantes if u.esta_viva()]
-        self.unidades_defensoras = [u for u in self.unidades_defensoras if u.esta_viva()]
+        # ====================================
+        # RONDAS
+        # ====================================
 
-    def siguiente_turno(self):
-        self.turno += 1
+        self.ronda = 1
 
-        for u in self.unidades_atacantes + self.unidades_defensoras:
-            u.actualizar_habilidad()
+        self.victorias_defensor = 0
+        self.victorias_atacante = 0
 
-        self.mover_atacantes()
-        self.combate()
-        self.daño_a_base()
+        # ====================================
+        # FASES
+        # ====================================
+
+        self.fase = "DEFENSOR"
+
+        # ====================================
+        # ENTIDADES ACTIVAS
+        # ====================================
+
+        self.torres = []
+        self.muros = []
+        self.unidades = []
+
+        self.finalizada = False
+        self.ganador = None
+
+    # ==================================================
+    # LOOP PRINCIPAL
+    # ==================================================
+
+    def actualizar(self):
+
+        if self.finalizada:
+            return
+
+        if self.fase != "COMBATE":
+            return
+
+        self.ejecutar_combate()
+
+    # ==================================================
+    # COMPRAS
+    # ==================================================
+
+    def colocar_torre(self, torre, fila, columna):
+
+        if self.fase != "DEFENSOR":
+            return False
+
+        if self.oro_defensor < torre.costo:
+            return False
+
+        if self.mapa.colocar(fila, columna, torre):
+
+            self.torres.append(torre)
+            self.oro_defensor -= torre.costo
+
+            return True
+
+        return False
+
+    def colocar_muro(self, muro, fila, columna):
+
+        if self.fase != "DEFENSOR":
+            return False
+
+        if self.oro_defensor < muro.costo:
+            return False
+
+        if self.mapa.colocar(fila, columna, muro):
+
+            self.muros.append(muro)
+            self.oro_defensor -= muro.costo
+
+            return True
+
+        return False
+
+    def colocar_unidad(self, unidad, fila, columna):
+
+        if self.fase != "ATAQUE":
+            return False
+
+        if self.oro_atacante < unidad.costo:
+            return False
+
+        if self.mapa.colocar(fila, columna, unidad):
+
+            self.unidades.append(unidad)
+            self.oro_atacante -= unidad.costo
+
+            return True
+
+        return False
+
+    # ==================================================
+    # CAMBIO DE FASE
+    # ==================================================
+
+    def pasar_fase(self):
+
+        # El jugador decide avanzar de fase; el oro restante no debe
+        # impedir el avance, solo se informa para que decida si seguir comprando.
+        if self.fase == "DEFENSOR":
+
+            self.fase = "ATAQUE"
+            return True
+
+        elif self.fase == "ATAQUE":
+
+            self.fase = "COMBATE"
+            return True
+
+        return False
+
+    # ==================================================
+    # COMBATE
+    # ==================================================
+
+    def ejecutar_combate(self):
+
+        self.mover_unidades()
+
+        self.torres_atacan()
+
         self.limpiar_muertos()
 
-        if self.base_vida <= 0:
-            self.juego_activo = False
-            print("¡Ganaron los atacantes!")
+        self.verificar_fin_ronda()
 
-        if len(self.unidades_atacantes) == 0:
-            self.juego_activo = False
-            print("¡Ganaron los defensores!")
+    # ==================================================
+    # MOVIMIENTO
+    # ==================================================
 
-    def estado(self):
-        return {
-            "turno": self.turno,
-            "base_vida": self.base_vida,
-            "atacantes": len(self.unidades_atacantes),
-            "defensores": len(self.unidades_defensoras)
-        }
+    def mover_unidades(self):
+
+        for unidad in list(self.unidades):
+
+            if not unidad.esta_viva():
+                continue
+
+            for _ in range(unidad.velocidad):
+
+                # Si la unidad ya esta junto a la base, se queda fija
+                # atacandola cada turno hasta morir o hasta destruirla.
+                if self.adyacente_a_base(unidad.fila, unidad.columna):
+                    self.mapa.base.recibir_dano(unidad.dano)
+                    self.bono_atacante += unidad.dano
+                    break
+
+                fila = unidad.fila
+                columna = unidad.columna
+
+                destino_fila = fila
+                destino_columna = columna
+
+                if fila < self.mapa.base.fila:
+                    destino_fila += 1
+                elif fila > self.mapa.base.fila:
+                    destino_fila -= 1
+
+                if columna < self.mapa.base.columna:
+                    destino_columna += 1
+                elif columna > self.mapa.base.columna:
+                    destino_columna -= 1
+
+                # Llego a la base: ataca pero permanece en el mapa
+                if (
+                    destino_fila == self.mapa.base.fila and
+                    destino_columna == self.mapa.base.columna
+                ):
+
+                    self.mapa.base.recibir_dano(unidad.dano)
+
+                    self.bono_atacante += unidad.dano
+
+                    break
+
+                objeto = self.mapa.obtener_objeto(
+                    destino_fila,
+                    destino_columna
+                )
+
+                if objeto is None:
+
+                    self.mapa.mover_unidad(
+                        unidad,
+                        destino_fila,
+                        destino_columna
+                    )
+
+                elif hasattr(objeto, "velocidad"):
+
+                    # Es otra unidad atacante (aliada), no un obstaculo
+                    # del defensor: simplemente espera a que se libere
+                    # la celda, sin causarle daño.
+                    break
+
+                else:
+
+                    if hasattr(objeto, "recibir_dano"):
+
+                        objeto.recibir_dano(unidad.dano)
+
+                        self.bono_atacante += unidad.dano
+
+                    break
+
+    def adyacente_a_base(self, fila, columna):
+
+        distancia = max(
+            abs(fila - self.mapa.base.fila),
+            abs(columna - self.mapa.base.columna)
+        )
+
+        return distancia <= 1 and not (
+            fila == self.mapa.base.fila and
+            columna == self.mapa.base.columna
+        )
+
+    # ==================================================
+    # TORRES
+    # ==================================================
+
+    def torres_atacan(self):
+
+        for torre in self.torres:
+
+            if not torre.esta_viva():
+                continue
+
+            torre.intentar_habilidad(self.mapa)
+
+            objetivo = self.mapa.unidad_mas_cercana(
+                torre.fila,
+                torre.columna,
+                torre.alcance
+            )
+
+            if objetivo:
+                torre.atacar(objetivo)
+
+    # ==================================================
+    # LIMPIEZA
+    # ==================================================
+
+    def limpiar_muertos(self):
+
+        for unidad in list(self.unidades):
+
+            if not unidad.esta_viva():
+
+                self.mapa.eliminar(
+                    unidad.fila,
+                    unidad.columna
+                )
+
+                self.unidades.remove(unidad)
+
+                self.oro_defensor += 25
+
+        for torre in list(self.torres):
+
+            if not torre.esta_viva():
+
+                self.mapa.eliminar(
+                    torre.fila,
+                    torre.columna
+                )
+
+                self.torres.remove(torre)
+
+        for muro in list(self.muros):
+
+            if muro.esta_destruido():
+
+                self.mapa.eliminar(
+                    muro.fila,
+                    muro.columna
+                )
+
+                self.muros.remove(muro)
+
+    # ==================================================
+    # RONDAS
+    # ==================================================
+
+    def verificar_fin_ronda(self):
+
+        # atacante gana: la base fue destruida
+
+        if self.mapa.base.esta_destruida():
+
+            self.victorias_atacante += 1
+
+            self.reiniciar_ronda()
+
+            return
+
+        # defensor gana: ya estamos en fase de combate (no se puede comprar
+        # mas) y no quedan unidades atacantes con vida en el campo
+
+        unidades_vivas = [u for u in self.unidades if u.esta_viva()]
+
+        if len(unidades_vivas) == 0:
+
+            self.victorias_defensor += 1
+
+            self.reiniciar_ronda()
+
+            return
+
+    # ==================================================
+    # NUEVA RONDA
+    # ==================================================
+
+    def reiniciar_ronda(self):
+
+        if self.victorias_defensor >= 3:
+
+            self.finalizada = True
+            self.ganador = self.jugador_defensor
+
+            self.jugador_defensor.sumar_victoria_defensor()
+
+            return
+
+        if self.victorias_atacante >= 3:
+
+            self.finalizada = True
+            self.ganador = self.jugador_atacante
+
+            self.jugador_atacante.sumar_victoria_atacante()
+
+            return
+
+        self.ronda += 1
+
+        self.oro_defensor += 500
+
+        self.oro_atacante += 500
+        self.oro_atacante += self.bono_atacante
+
+        self.bono_atacante = 0
+
+        self.torres.clear()
+        self.muros.clear()
+        self.unidades.clear()
+
+        self.mapa.reiniciar()
+
+        self.fase = "DEFENSOR"

@@ -1,68 +1,231 @@
-from Base import Base
+from Clases.Base import Base
 
 
 class Mapa:
 
-    def __init__(self):
+    def __init__(self, size=15):
 
-        self.filas = 10
-        self.columnas = 10
+        self.size = size
 
-        self.matriz = [
-            [None for _ in range(self.columnas)]
-            for _ in range(self.filas)
+        # Matriz principal
+        self.grid = [
+            [None for _ in range(size)]
+            for _ in range(size)
+        ]
+
+        # Base central
+        self.base = Base()
+
+        self.base.fila = size // 2
+        self.base.columna = size // 2
+
+        self.grid[self.base.fila][self.base.columna] = self.base
+
+        # Colores para la interfaz
+        self.facciones = {
+            "Medieval": {
+                "base": "#8B0000",
+                "torre": "#A0522D",
+                "unidad": "#CD853F",
+                "muro": "#696969"
+            },
+
+            "Futurista": {
+                "base": "#00BFFF",
+                "torre": "#1E90FF",
+                "unidad": "#00FFFF",
+                "muro": "#708090"
+            },
+
+            "Naturaleza": {
+                "base": "#228B22",
+                "torre": "#6B8E23",
+                "unidad": "#7CFC00",
+                "muro": "#2E8B57"
+            }
+        }
+
+    # =====================================================
+    # VALIDACIONES
+    # =====================================================
+
+    def en_rango(self, fila, columna):
+        return (
+            0 <= fila < self.size and
+            0 <= columna < self.size
+        )
+
+    def celda_libre(self, fila, columna):
+
+        if not self.en_rango(fila, columna):
+            return False
+
+        return self.grid[fila][columna] is None
+
+    # =====================================================
+    # COLOCAR OBJETOS
+    # =====================================================
+
+    def colocar(self, fila, columna, objeto):
+
+        if not self.en_rango(fila, columna):
+            return False
+
+        if not self.celda_libre(fila, columna):
+            return False
+
+        self.grid[fila][columna] = objeto
+
+        objeto.fila = fila
+        objeto.columna = columna
+
+        return True
+
+    # =====================================================
+    # ELIMINAR OBJETO
+    # =====================================================
+
+    def eliminar(self, fila, columna):
+
+        if not self.en_rango(fila, columna):
+            return False
+
+        if self.grid[fila][columna] is self.base:
+            return False
+
+        self.grid[fila][columna] = None
+
+        return True
+
+    # =====================================================
+    # MOVIMIENTO DE UNIDADES
+    # =====================================================
+
+    def mover_unidad(self, unidad, nueva_fila, nueva_columna):
+
+        if not self.en_rango(nueva_fila, nueva_columna):
+            return False
+
+        fila_actual = unidad.fila
+        columna_actual = unidad.columna
+
+        # Si el destino es la celda actual de la propia unidad, no hay nada que mover
+        if (fila_actual, columna_actual) == (nueva_fila, nueva_columna):
+            return True
+
+        # La celda destino debe estar libre o ser la celda que la unidad ya ocupaba
+        if self.grid[nueva_fila][nueva_columna] is not None:
+            return False
+
+        # Solo se limpia la celda de origen si efectivamente la ocupaba esta unidad,
+        # evitando borrar referencias de otro objeto que haya quedado ahi por error
+        if self.en_rango(fila_actual, columna_actual):
+            if self.grid[fila_actual][columna_actual] is unidad:
+                self.grid[fila_actual][columna_actual] = None
+
+        self.grid[nueva_fila][nueva_columna] = unidad
+
+        unidad.mover((nueva_fila, nueva_columna))
+
+        return True
+
+    # =====================================================
+    # DAÑO A LA BASE
+    # =====================================================
+
+    def danar_base(self, dano):
+        self.base.recibir_dano(dano)
+
+    # =====================================================
+    # CONSULTAS
+    # =====================================================
+
+    def obtener_objeto(self, fila, columna):
+
+        if not self.en_rango(fila, columna):
+            return None
+
+        return self.grid[fila][columna]
+
+    # =====================================================
+    # TORRES
+    # =====================================================
+
+    def unidad_mas_cercana(self, fila, columna, alcance):
+
+        mejor = None
+        mejor_distancia = 999999
+
+        for i in range(self.size):
+            for j in range(self.size):
+
+                obj = self.grid[i][j]
+
+                if obj is None:
+                    continue
+
+                # Solo unidades vivas
+                if not hasattr(obj, "velocidad"):
+                    continue
+
+                if hasattr(obj, "esta_viva") and not obj.esta_viva():
+                    continue
+
+                distancia = max(
+                    abs(fila - i),
+                    abs(columna - j)
+                )
+
+                if distancia <= alcance:
+
+                    if distancia < mejor_distancia:
+                        mejor = obj
+                        mejor_distancia = distancia
+
+        return mejor
+
+    def unidades_en_rango(self, fila, columna, alcance):
+
+        unidades = []
+
+        for i in range(self.size):
+            for j in range(self.size):
+
+                obj = self.grid[i][j]
+
+                if obj is None:
+                    continue
+
+                if not hasattr(obj, "velocidad"):
+                    continue
+
+                if hasattr(obj, "esta_viva") and not obj.esta_viva():
+                    continue
+
+                distancia = max(
+                    abs(fila - i),
+                    abs(columna - j)
+                )
+
+                if distancia <= alcance:
+                    unidades.append(obj)
+
+        return unidades
+
+    # =====================================================
+    # REINICIAR RONDA
+    # =====================================================
+
+    def reiniciar(self):
+
+        self.grid = [
+            [None for _ in range(self.size)]
+            for _ in range(self.size)
         ]
 
         self.base = Base()
 
-        self.base_fila = 5
-        self.base_columna = 5
+        self.base.fila = self.size // 2
+        self.base.columna = self.size // 2
 
-        self.matriz[self.base_fila][self.base_columna] = self.base
-
-    def obtener_casilla(self, fila, columna):
-
-        if 0 <= fila < self.filas and 0 <= columna < self.columnas:
-            return self.matriz[fila][columna]
-
-        return None
-
-    def colocar_objeto(self, fila, columna, objeto):
-
-        if not (0 <= fila < self.filas and 0 <= columna < self.columnas):
-            return False
-
-        if self.matriz[fila][columna] is not None:
-            return False
-
-        self.matriz[fila][columna] = objeto
-
-        if hasattr(objeto, "fila"):
-            objeto.fila = fila
-
-        if hasattr(objeto, "columna"):
-            objeto.columna = columna
-
-        return True
-
-    def eliminar_objeto(self, fila, columna):
-
-        if 0 <= fila < self.filas and 0 <= columna < self.columnas:
-            self.matriz[fila][columna] = None
-
-    def mostrar(self):
-
-        for fila in self.matriz:
-
-            for casilla in fila:
-
-                if casilla is None:
-                    print(".", end=" ")
-
-                elif isinstance(casilla, Base):
-                    print("B", end=" ")
-
-                else:
-                    print("X", end=" ")
-
-            print()
+        self.grid[self.base.fila][self.base.columna] = self.base

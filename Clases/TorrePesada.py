@@ -1,4 +1,4 @@
-from Torre import Torre
+from Clases.Torre import Torre
 
 class TorrePesada(Torre):
 

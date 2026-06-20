@@ -1,8 +1,11 @@
 from tkinter import Tk
 
+from Clases.Partida import Partida
 from Interfaz.Menu import Menu
 from Interfaz.Ranking import Ranking
 from Interfaz.Login import Login
+from Interfaz.Juego import Juego
+from Clases.Mapa import Mapa
 
 
 class Main:
@@ -38,9 +41,22 @@ class Main:
             self.iniciar_partida
         )
 
-    def iniciar_partida(self, j1, j2):
+    def iniciar_partida(self, j1, j2, faccion_defensor, faccion_atacante):
         self.j1 = j1
         self.j2 = j2
+        self.faccion_defensor = faccion_defensor
+        self.faccion_atacante = faccion_atacante
+
+        self.mapa = Mapa()
+
+        self.partida = Partida(
+            self.j1,
+            self.j2,
+            self.faccion_defensor,
+            self.faccion_atacante,
+            self.mapa
+        )
+
         self.mostrar_juego()
 
     # ── RANKING ──
@@ -55,10 +71,10 @@ class Main:
     def mostrar_juego(self):
         self.limpiar()
 
-        print("PARTIDA INICIADA")
-        print("Jugador 1:", self.j1.nombre)
-        print("Jugador 2:", self.j2.nombre)
-
+        self.pantalla_actual = Juego(
+            self.root,
+            self.partida
+        )
 
 # ── EJECUCIÓN ──
 root = Tk()

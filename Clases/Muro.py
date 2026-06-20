@@ -3,6 +3,9 @@ class Muro:
     def __init__(self):
         self.costo = 50
         self.vida = 150
+        
+        self.fila = None
+        self.columna = None
 
     def recibir_dano(self, dano):
         self.vida -= dano

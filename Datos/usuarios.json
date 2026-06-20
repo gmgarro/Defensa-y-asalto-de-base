@@ -76,5 +76,47 @@
         "password": "123",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+    },
+    "prueba": {
+        "nombre": "prueba",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "prueba2": {
+        "nombre": "prueba2",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Juanito": {
+        "nombre": "Juanito",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Prueba": {
+        "nombre": "Prueba",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Prueba2": {
+        "nombre": "Prueba2",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Jimena": {
+        "nombre": "Jimena",
+        "password": "1234",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "Gabo": {
+        "nombre": "Gabo",
+        "password": "1234",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }
