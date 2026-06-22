@@ -16,5 +16,11 @@
         "password": "1234",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+    },
+    "Prueba video": {
+        "nombre": "Prueba video",
+        "password": "123",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }
