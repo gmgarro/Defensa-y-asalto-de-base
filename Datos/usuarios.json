@@ -142,5 +142,29 @@
         "password": "avc",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+    },
+    "q": {
+        "nombre": "q",
+        "password": "1",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "1": {
+        "nombre": "1",
+        "password": "1",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
+    },
+    "slat": {
+        "nombre": "slat",
+        "password": "123",
+        "victorias_defensor": 1,
+        "victorias_atacante": 0
+    },
+    "yt": {
+        "nombre": "yt",
+        "password": "ysl",
+        "victorias_defensor": 0,
+        "victorias_atacante": 0
     }
 }
