@@ -6,7 +6,7 @@ from Interfaz.Ranking import Ranking
 from Interfaz.Login import Login
 from Interfaz.Juego import Juego
 from Clases.Mapa import Mapa
-
+from Interfaz.PantallaVictoria import PantallaVictoria
 
 class Main:
 
@@ -100,7 +100,24 @@ class Main:
 
         self.pantalla_actual = Juego(
             self.root,
-            self.partida
+            self.partida,
+            self.mostrar_victoria
+        )
+        
+    # ── VICTORIA ──
+
+    #e: ganador, victorias del defensor y victorias del atacante
+    #s: ninguna
+    # Muestra la pantalla de resultado final de la partida
+    def mostrar_victoria(self, ganador, victorias_defensor, victorias_atacante):
+        self.limpiar()
+
+        self.pantalla_actual = PantallaVictoria(
+            self.root,
+            self.mostrar_menu,
+            ganador,
+            victorias_defensor,
+            victorias_atacante
         )
 
 # ── EJECUCIÓN ──

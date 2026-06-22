@@ -29,11 +29,12 @@ class Juego:
 
     CARPETA_IMAGENES = os.path.join("Recursos", "Imagenes")
 
-    def __init__(self, root, partida):
+    def __init__(self, root, partida, callback_fin):
+        
 
         self.root = root
         self.partida = partida
-
+        self.callback_fin = callback_fin
         self.tam_celda = 40
 
         self.opcion = StringVar(value="Muro")
@@ -552,6 +553,10 @@ class Juego:
     # LOOP
     # =====================================
 
+    # =====================================
+    # LOOP
+    # =====================================
+
     def loop(self):
 
         self.partida.actualizar()
@@ -560,11 +565,11 @@ class Juego:
 
         if self.partida.finalizada:
 
-            self.lbl_victoria.config(
-                text=f"¡VICTORIA!\n{self.partida.ganador.nombre}"
+            self.callback_fin(
+                self.partida.ganador,
+                self.partida.victorias_defensor,
+                self.partida.victorias_atacante
             )
-
-            self.mostrar_ventana_victoria()
 
             return
 
@@ -573,56 +578,3 @@ class Juego:
             self.loop
         )
 
-    # =====================================
-    # VENTANA DE VICTORIA
-    # =====================================
-
-    def mostrar_ventana_victoria(self):
-
-        ventana = Toplevel(self.root)
-        ventana.title("Fin de la partida")
-        ventana.configure(bg=self.COLOR_PANEL)
-        ventana.geometry("360x220")
-        ventana.resizable(False, False)
-
-        Label(
-            ventana,
-            text="¡PARTIDA FINALIZADA!",
-            font=("Impact", 18),
-            bg=self.COLOR_PANEL,
-            fg=self.COLOR_ACENTO
-        ).pack(pady=(25, 10))
-
-        Label(
-            ventana,
-            text=f"Ganador: {self.partida.ganador.nombre}",
-            font=("Arial", 14, "bold"),
-            bg=self.COLOR_PANEL,
-            fg=self.COLOR_ORO
-        ).pack(pady=5)
-
-        Label(
-            ventana,
-            text=(
-                f"Marcador final: "
-                f"{self.partida.victorias_defensor} - "
-                f"{self.partida.victorias_atacante}"
-            ),
-            font=("Arial", 11),
-            bg=self.COLOR_PANEL,
-            fg=self.COLOR_TEXTO
-        ).pack(pady=5)
-
-        Button(
-            ventana,
-            text="Cerrar",
-            command=ventana.destroy,
-            font=("Arial", 11, "bold"),
-            bg="#111111",
-            fg="white",
-            activebackground=self.COLOR_ACENTO,
-            activeforeground="white",
-            bd=0,
-            relief="flat",
-            cursor="hand2"
-        ).pack(pady=20)

@@ -1,69 +1,16 @@
 {
-    "Ana": {
-        "nombre": "Ana",
+    "Prueba": {
+        "nombre": "Prueba",
         "password": "123",
         "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Luis": {
-        "nombre": "Luis",
-        "password": "123",
-        "victorias_defensor": 2,
-        "victorias_atacante": 3
-    },
-    "Carlos": {
-        "nombre": "Carlos",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 5
-    },
-    "Maria": {
-        "nombre": "Maria",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Jose": {
-        "nombre": "Jose",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Sofia": {
-        "nombre": "Sofia",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Pedro": {
-        "nombre": "Pedro",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Elena": {
-        "nombre": "Elena",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Diego": {
-        "nombre": "Diego",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
-    },
-    "Laura": {
-        "nombre": "Laura",
-        "password": "123",
-        "victorias_defensor": 0,
-        "victorias_atacante": 0
+        "victorias_atacante": 1
     },
     "Jimenita": {
         "nombre": "Jimenita",
         "password": "1234",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+<<<<<<< HEAD
     },
     "Gabito": {
         "nombre": "Gabito",
@@ -166,5 +113,7 @@
         "password": "ysl",
         "victorias_defensor": 0,
         "victorias_atacante": 0
+=======
+>>>>>>> 735e9e735bc502394472ba06c6c7708559aebf37
     }
 }
